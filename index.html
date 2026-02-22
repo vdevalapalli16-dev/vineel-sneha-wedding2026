@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vineel & Sneha — November 2026, Jaipur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --jaipur:#C4706E;--jaipur-deep:#A14D4A;--jaipur-light:#D9A3A0;--jaipur-pale:#F2E0DE;--jaipur-faint:#FBF3F2;
+  --terracotta:#B86B4A;--terracotta-light:#D4A080;
+  --sage:#6B8F71;--sage-deep:#4A6E50;--sage-light:#A3C4A8;--sage-pale:#E6F0E7;
+  --gold:#B8963E;--gold-light:#DBC88A;--gold-faint:#F8F1DD;
+  --ivory:#FDFBF7;--linen:#F7F3ED;--sand:#EDE5D8;
+  --ink:#2D2420;--text:#4A3F3A;--text-light:#7A6F68;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--ivory);overflow-x:hidden;font-weight:300}
+
+/* ===== OVERLAYS (Password + Name) ===== */
+.overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--ivory);transition:opacity .8s,visibility .8s}
+.overlay.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ov-card{text-align:center;padding:3.5rem 3rem;max-width:420px;width:90%;position:relative}
+.ov-card::before{content:'';position:absolute;inset:-1px;border:1px solid var(--jaipur-light);pointer-events:none}
+.ov-card::after{content:'';position:absolute;inset:8px;border:1px solid var(--gold-light);opacity:.4;pointer-events:none}
+
+/* Hawa Mahal silhouette behind overlay cards */
+.ov-bg{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;pointer-events:none}
+.ov-bg svg{width:100%;max-width:900px;opacity:.04}
+
+/* Bandhani dot pattern */
+.bandhani-bg{position:absolute;inset:0;opacity:.025;pointer-events:none;background-image:radial-gradient(circle,var(--jaipur) .8px,transparent .8px);background-size:18px 18px}
+
+.ov-pre{font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-light);margin-bottom:1.5rem}
+.ov-names{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--ink);line-height:1.3;margin-bottom:.3rem}
+.ov-names em{font-family:'Pinyon Script',cursive;font-style:normal;font-size:1.8rem;color:var(--jaipur);display:inline-block;margin:0 .3em}
+.ov-sub{font-size:.85rem;color:var(--text-light);margin-bottom:2rem;font-weight:300}
+.ov-row{display:flex;gap:.5rem}
+.ov-in{flex:1;padding:.75rem 1rem;border:1px solid var(--sand);background:transparent;font-family:'Jost',sans-serif;font-size:.9rem;color:var(--ink);outline:none;transition:border-color .3s;letter-spacing:.03em}
+.ov-in:focus{border-color:var(--jaipur)}
+.ov-in.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.ov-btn{padding:.75rem 1.5rem;background:var(--jaipur-deep);color:white;border:none;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:400;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:background .3s}
+.ov-btn:hover{background:var(--jaipur)}
+.ov-err{color:var(--jaipur);font-size:.78rem;margin-top:1rem;display:none;font-weight:400}
+.ov-err.on{display:block}
+.disambig-opt{display:flex;flex-direction:column;gap:.2rem;width:100%;text-align:left;padding:.85rem 1rem;background:transparent;border:1px solid var(--sand);margin-bottom:.5rem;cursor:pointer;transition:border-color .25s,background .25s;font-family:'Jost',sans-serif}
+.disambig-opt:hover{border-color:var(--jaipur);background:var(--jaipur-faint)}
+.disambig-names{font-size:.88rem;color:var(--ink);font-weight:400;line-height:1.4}
+.disambig-evs{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light)}
+
+/* Welcome message on name screen */
+.welcome-msg{display:none;margin-top:1.5rem;padding:1.2rem;border:1px solid var(--sage-light);background:var(--sage-pale)}
+.welcome-msg h4{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;color:var(--sage-deep);margin-bottom:.3rem}
+.welcome-msg p{font-size:.82rem;color:var(--text);line-height:1.5}
+.welcome-msg .enter-site{margin-top:1rem;padding:.65rem 1.8rem;background:var(--sage-deep);color:white;border:none;font-family:'Jost',sans-serif;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:background .3s}
+.welcome-msg .enter-site:hover{background:var(--sage)}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:none;justify-content:center;gap:2.5rem;padding:1.2rem 2rem;background:rgba(253,251,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--sand)}
+nav.show{display:flex}
+nav a{text-decoration:none;font-size:.72rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--text-light);transition:color .3s}
+nav a:hover{color:var(--jaipur)}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(253,251,247,.82) 0%,rgba(253,251,247,.7) 40%,rgba(253,251,247,.7) 60%,rgba(253,251,247,.82) 100%),url('Hero_Section.jpg') center/cover no-repeat}
+/* Rajasthani paisley block-print pattern */
+.hero-pattern{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 15c8 15 22 22 26 36s-6 30-26 30-30-16-26-30 18-21 26-36z' fill='%23A14D4A'/%3E%3Cpath d='M80 30c4 8 12 12 14 20s-4 16-14 16-16-8-14-16 10-12 14-20z' fill='%23FDFBF7'/%3E%3Ccircle cx='80' cy='50' r='4' fill='none' stroke='%23B8963E' stroke-width='.5'/%3E%3Cpath d='M30 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3Cpath d='M114 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3C/svg%3E");background-size:160px}
+
+/* Hawa Mahal SVG skyline at bottom of hero */
+.hawa-mahal{position:absolute;bottom:0;left:0;right:0;z-index:1;display:flex;justify-content:center}
+.hawa-mahal svg{width:100%;max-width:1200px;height:auto;opacity:.08}
+
+/* Bougainvillea vines */
+.vine{position:absolute;top:0;z-index:2;width:clamp(140px,20vw,280px);opacity:.35}
+.vine-l{left:0}.vine-r{right:0}
+.petal{position:absolute;z-index:1;pointer-events:none;animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(-10px) rotate(0) scale(.7);opacity:0}8%{opacity:.45}85%{opacity:.2}100%{transform:translateY(100vh) rotate(400deg) scale(.3);opacity:0}}
+
+.hero-inner{position:relative;z-index:3;padding:2rem}
+.h-pre{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text-light);margin-bottom:1.8rem;animation:fu 1s .2s both}
+.h-names{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:300;line-height:1;margin-bottom:.5rem;animation:fu 1s .5s both}
+.h-names .v{color:var(--sage-deep)}.h-names .s{color:var(--jaipur-deep)}
+.h-names .amp{font-family:'Pinyon Script',cursive;color:var(--jaipur);font-size:.55em;margin:0 .15em;display:inline-block}
+.h-tag{font-family:'Pinyon Script',cursive;font-size:clamp(1.2rem,3vw,1.8rem);color:var(--text-light);margin-bottom:2.5rem;animation:fu 1s .8s both}
+.h-date{display:inline-block;font-size:.72rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);padding:.8rem 2rem;border:1px solid var(--gold);animation:fu 1s 1.1s both}
+.h-loc{margin-top:1rem;font-size:.82rem;color:var(--text-light);letter-spacing:.12em;animation:fu 1s 1.3s both}
+/* Personalized welcome below location */
+.h-welcome{margin-top:1.5rem;font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;color:var(--jaipur);font-style:italic;animation:fu 1s 1.5s both;display:none}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.scroll-cue{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);animation:bob 2.5s ease infinite;z-index:4}
+.scroll-cue svg{stroke:var(--jaipur-light);width:18px}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* Jharokha arch frame around hero names */
+.jharokha{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:110%;max-width:620px;opacity:.15;pointer-events:none}
+
+/* ===== ORNAMENT ===== */
+.orn{display:flex;align-items:center;justify-content:center;padding:.6rem 0;background:var(--ivory)}
+.orn svg{height:20px;width:200px}
+
+/* ===== COUNTDOWN ===== */
+.cdown{background:var(--jaipur-deep);color:white;padding:2.5rem;text-align:center;position:relative;overflow:hidden}
+/* Bandhani pattern in countdown */
+.cdown::before{content:'';position:absolute;inset:0;opacity:.08;background-image:radial-gradient(circle,rgba(255,255,255,.4) .6px,transparent .6px);background-size:14px 14px}
+.cdown h3{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;opacity:.7;margin-bottom:1.2rem;font-weight:300;position:relative}
+.cd-grid{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;position:relative}
+.cd-n{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;line-height:1}
+.cd-l{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-top:.2rem}
+
+/* ===== SECTIONS ===== */
+.sec{padding:6rem 2rem;max-width:860px;margin:0 auto}
+.sec-label{font-size:.6rem;font-weight:400;letter-spacing:.4em;text-transform:uppercase;color:var(--sage);text-align:center;margin-bottom:.5rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:300;text-align:center;margin-bottom:.8rem}
+.sec-line{width:40px;height:1px;background:var(--gold);margin:0 auto 3.5rem;opacity:.5}
+
+/* ===== STORY ===== */
+.story-wrap{max-width:100%;padding:6rem 2rem;background:var(--jaipur-faint);position:relative;overflow:hidden}
+/* Rajasthani elephant border */
+.story-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg width='120' height='50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 10c3-5 8-8 14-8s10 4 12 8c2 5 0 10-4 14l-6 4c2 3 1 7-2 9h-6l-2-3-2 3h-6c-3-2-4-6-2-9l-6-4c-4-4-6-9-4-14z' fill='%23A14D4A'/%3E%3Ccircle cx='68' cy='8' r='2' fill='%23A14D4A'/%3E%3Cpath d='M20 45h80' stroke='%23B8963E' stroke-width='.5'/%3E%3C/svg%3E");background-size:120px 50px;background-repeat:repeat-x}
+.story-wrap .inner{max-width:860px;margin:0 auto;position:relative;z-index:2}
+.tl{position:relative;padding:1rem 0}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--jaipur-light),var(--sage-light),var(--jaipur-light));transform:translateX(-50%)}
+.tl-item{display:flex;margin-bottom:3.5rem;position:relative;opacity:0;animation:fu .7s ease forwards}
+.tl-item:nth-child(1){animation-delay:.2s}.tl-item:nth-child(2){animation-delay:.4s}.tl-item:nth-child(3){animation-delay:.6s}.tl-item:nth-child(4){animation-delay:.8s}
+.tl-dot{position:absolute;left:50%;top:.6rem;width:10px;height:10px;border-radius:50%;transform:translateX(-50%);z-index:2;border:2px solid white}
+.tl-item:nth-child(1) .tl-dot{background:var(--jaipur);box-shadow:0 0 0 3px var(--jaipur-pale)}
+.tl-item:nth-child(2) .tl-dot{background:var(--gold);box-shadow:0 0 0 3px var(--gold-faint)}
+.tl-item:nth-child(3) .tl-dot{background:var(--sage);box-shadow:0 0 0 3px var(--sage-pale)}
+.tl-item:nth-child(4) .tl-dot{background:var(--terracotta);box-shadow:0 0 0 3px var(--gold-faint)}
+.tl-card{width:44%;background:white;padding:0;box-shadow:0 2px 16px rgba(0,0,0,.04);border-top:2px solid var(--jaipur-light);overflow:hidden}
+.tl-img{width:100%;height:180px;object-fit:cover;display:block}
+.tl-body{padding:1.5rem 1.8rem 1.8rem}
+.tl-item:nth-child(odd) .tl-card{margin-right:auto}.tl-item:nth-child(even) .tl-card{margin-left:auto}
+.tl-item:nth-child(2) .tl-card{border-top-color:var(--gold-light)}
+.tl-item:nth-child(3) .tl-card{border-top-color:var(--sage-light)}
+.tl-item:nth-child(4) .tl-card{border-top-color:var(--terracotta-light)}
+.tl-card .yr{font-family:'Pinyon Script',cursive;font-size:1.4rem;color:var(--jaipur);margin-bottom:.2rem}
+.tl-card h4{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.tl-card p{font-size:.86rem;line-height:1.7;color:var(--text)}
+
+/* ===== EVENTS ===== */
+.events-wrap{max-width:100%;padding:6rem 2rem;background:var(--linen);position:relative;overflow:hidden}
+/* Jharokha pattern in events background */
+.events-wrap::before{content:'';position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg width='100' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 80 L10 40 Q50 0 90 40 L90 80' fill='none' stroke='%23A14D4A' stroke-width='.8'/%3E%3Cpath d='M20 80 L20 45 Q50 10 80 45 L80 80' fill='none' stroke='%23B8963E' stroke-width='.5'/%3E%3Cpath d='M35 55 Q50 35 65 55' fill='none' stroke='%23A14D4A' stroke-width='.4'/%3E%3C/svg%3E");background-size:100px 80px}
+.events-wrap .inner{max-width:900px;margin:0 auto;position:relative;z-index:2}
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}
+.ev-card{background:white;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.04);transition:transform .3s,box-shadow .3s}
+.ev-card:hover{transform:translateY(-3px);box-shadow:0 6px 28px rgba(0,0,0,.07)}
+.ev-top{height:4px}
+.ev-card:nth-child(1) .ev-top{background:linear-gradient(to right,var(--jaipur),var(--jaipur-deep))}
+.ev-card:nth-child(2) .ev-top{background:linear-gradient(to right,var(--gold),var(--terracotta))}
+.ev-card:nth-child(3) .ev-top{background:linear-gradient(to right,var(--sage),var(--sage-deep))}
+.ev-body{padding:2rem}
+.ev-day{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:.15rem}
+.ev-date{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-light);margin-bottom:1.2rem}
+.ev-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--jaipur-deep);margin-bottom:.5rem}
+.ev-desc{font-size:.85rem;line-height:1.7;color:var(--text)}
+.ev-meta{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--text-light);margin-top:1rem}
+
+/* ===== GALLERY ===== */
+.gal-wrap{max-width:100%;padding:6rem 2rem;background:var(--ivory)}
+.gal-wrap .inner{max-width:1000px;margin:0 auto}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:220px;gap:.8rem}
+.gal-item{overflow:hidden;display:flex;align-items:center;justify-content:center;transition:transform .3s;cursor:pointer;position:relative}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gal-item:hover img{transform:scale(1.05)}
+.gal-item:nth-child(1){grid-row:span 2}
+.gal-item:nth-child(4){grid-column:span 2}
+
+
+/* ===== RSVP ===== */
+.rsvp-wrap{max-width:100%;padding:6rem 2rem;color:white;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--jaipur-deep) 0%,#7A3A3A 45%,var(--sage-deep) 100%)}
+.rsvp-wrap::before{content:'';position:absolute;inset:0;opacity:.05;background-image:radial-gradient(circle,rgba(255,255,255,.35) .6px,transparent .6px);background-size:16px 16px}
+.rsvp-vine{position:absolute;opacity:.1;width:clamp(100px,14vw,200px)}
+.rv-l{bottom:0;left:0;transform:scaleX(-1)}.rv-r{top:0;right:0}
+.rsvp-wrap .sec-label{color:var(--jaipur-light)}.rsvp-wrap .sec-title{color:white}.rsvp-wrap .sec-line{background:var(--gold-light)}
+.rsvp-inner{max-width:580px;margin:0 auto;position:relative;z-index:2}
+.ev-rsvp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:1.5rem;margin-bottom:.8rem;text-align:left}
+.ev-rsvp h4{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;margin-bottom:.15rem}
+.ev-rsvp .ev-rsvp-d{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin-bottom:1rem}
+.g-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.g-row:last-child{border-bottom:none}
+.g-name{font-size:.88rem;font-weight:300}
+.g-tog{display:flex;gap:.4rem}
+.g-tog button{padding:.35rem .8rem;border:1px solid rgba(255,255,255,.2);background:transparent;color:white;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .25s}
+.g-tog button:hover{border-color:rgba(255,255,255,.45)}
+.g-tog button.a-on{background:var(--sage);border-color:var(--sage)}.g-tog button.d-on{background:var(--jaipur);border-color:var(--jaipur)}
+.r-in{width:100%;padding:.8rem 1rem;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:white;font-family:'Jost',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s}
+.r-in::placeholder{color:rgba(255,255,255,.35)}.r-in:focus{border-color:var(--gold-light)}
+.rsvp-btn{margin-top:1.2rem;width:100%;padding:.9rem;background:var(--gold);color:var(--ink);font-family:'Jost',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:all .3s}
+.rsvp-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.rsvp-ok{display:none;padding:2rem}
+.rsvp-ok h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;margin-bottom:.4rem}
+.rsvp-ok p{font-size:.85rem;opacity:.65}
+
+/* ===== FOOTER ===== */
+footer{text-align:center;padding:3.5rem 2rem;background:var(--ivory);border-top:1px solid var(--sand);position:relative;overflow:hidden}
+/* Hawa Mahal silhouette in footer */
+footer::before{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;opacity:.025;background-repeat:no-repeat;background-position:center bottom;background-size:contain}
+footer .fm{font-family:'Pinyon Script',cursive;font-size:2rem;color:var(--jaipur);margin-bottom:.5rem}
+footer p{font-size:.8rem;color:var(--text-light);line-height:1.9;font-weight:300}
+footer .tag{font-weight:500;color:var(--sage-deep);letter-spacing:.05em}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{gap:1rem;padding:.8rem 1rem;flex-wrap:wrap}nav a{font-size:.64rem}
+  .vine{width:100px}
+  .tl::before{left:16px}.tl-dot{left:16px!important}.tl-card{width:calc(100% - 44px)!important;margin-left:44px!important}
+  .ev-grid{grid-template-columns:1fr}
+  .gal-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:180px}.gal-item:nth-child(1){grid-row:span 1}.gal-item:nth-child(4){grid-column:span 1}
+  .tl-img{height:140px}
+  .ov-card{padding:2.5rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<svg style="position:absolute;width:0;height:0"><defs>
+<g id="bc"><path d="M0 0C2.5-5 8.5-8.5 12-7s5 7 0 11c-3 2-6 1-8-1S-2 3 0 0z" fill="#C4706E" opacity=".8"/></g>
+<g id="cl"><use href="#bc" opacity=".85"/><use href="#bc" opacity=".7" transform="rotate(70)"/><use href="#bc" opacity=".75" transform="rotate(140)"/><use href="#bc" opacity=".65" transform="rotate(210)"/><use href="#bc" opacity=".8" transform="rotate(280)"/><circle r="1.5" fill="#DBC88A" opacity=".6"/></g>
+<g id="lf"><path d="M0 0C3-7 10-10 15-7c-3 3-8 5-15 7z" fill="#6B8F71" opacity=".55"/><line x1="0" y1="0" x2="12" y2="-5" stroke="#4A6E50" stroke-width=".4" opacity=".25"/></g>
+<!-- Hawa Mahal simplified silhouette -->
+<symbol id="hawa" viewBox="0 0 800 200">
+  <path d="M100 200V120h20V80h-10V60h10V40h20V60h10V80h-10v40h20V200zM220 200V100h20V60h-10V40h10V20h20V40h10V60h-10v40h20V200zM340 200V80h20V40h-10V20h10V5h20V20h10V40h-10v40h20V200zM460 200V80h20V40h-10V20h10V5h20V20h10V40h-10v40h20V200zM580 200V100h20V60h-10V40h10V20h20V40h10V60h-10v40h20V200zM700 200V120h20V80h-10V60h10V40h20V60h10V80h-10v40h20V200z" fill="currentColor"/>
+  <path d="M0 200h800" stroke="currentColor" stroke-width="2"/>
+  <!-- Decorative arched windows -->
+  <path d="M120 180V150Q130 135 140 150V180zM240 160V130Q250 115 260 130V160zM360 140V110Q370 95 380 110V140zM480 140V110Q490 95 500 110V140zM600 160V130Q610 115 620 130V160zM720 180V150Q730 135 740 150V180z" fill="none" stroke="currentColor" stroke-width=".8"/>
+</symbol>
+</defs></svg>
+
+<!-- OVERLAY 1: Password -->
+<div class="overlay" id="pwOverlay">
+  <div class="bandhani-bg"></div>
+  <div class="ov-bg"><svg><use href="#hawa" style="color:var(--jaipur)"/></svg></div>
+  <div class="ov-card">
+    <div class="ov-pre">You are cordially invited</div>
+    <div class="ov-names">Vineel <em>&</em> Sneha</div>
+    <p class="ov-sub">Please enter the password to continue</p>
+    <div class="ov-row">
+      <input type="password" id="pwIn" class="ov-in" placeholder="Password" autocomplete="off">
+      <button class="ov-btn" id="pwBtn">Enter</button>
+    </div>
+    <p class="ov-err" id="pwErr">That doesn't seem right — please try again.</p>
+    <p class="ov-hint">Check your invitation for the password</p>
+  </div>
+</div>
+
+<!-- OVERLAY 2: Name Entry -->
+<div class="overlay gone" id="nameOverlay">
+  <div class="bandhani-bg"></div>
+  <div class="ov-bg"><svg><use href="#hawa" style="color:var(--jaipur)"/></svg></div>
+  <div class="ov-card">
+    <div class="ov-pre">Welcome</div>
+    <div class="ov-names" style="font-size:1.6rem;margin-bottom:.8rem">Please enter your name</div>
+    <p class="ov-sub">So we can personalize your experience</p>
+    <div class="ov-row">
+      <input type="text" id="nameIn" class="ov-in" placeholder="Your full name" autocomplete="off">
+      <button class="ov-btn" id="nameBtn">Find</button>
+    </div>
+    <p class="ov-err" id="nameErr">We couldn't find your name on the guest list. Please check the spelling or contact the couple.</p>
+    <div id="disambigPanel" style="display:none;margin-top:1.2rem;text-align:left">
+      <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.8rem">We found a few matches. Please select your party:</p>
+      <div id="disambigList"></div>
+      <button onclick="resetNameSearch()" style="margin-top:.8rem;background:none;border:none;font-family:Jost,sans-serif;font-size:.72rem;color:var(--text-light);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline">← Try a different name</button>
+    </div>
+    <div class="welcome-msg" id="welcomeMsg">
+      <h4 id="welcomeName"></h4>
+      <p id="welcomeParty"></p>
+      <button class="enter-site" id="enterSiteBtn">View Your Invitation</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav"><a href="#home">Home</a><a href="#story">Our Story</a><a href="#events">Events</a><a href="#gallery">Gallery</a><a href="#rsvp">RSVP</a></nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+<div class="hero-pattern"></div>
+<div class="hawa-mahal"><svg viewBox="0 0 800 200"><use href="#hawa" style="color:var(--jaipur)"/></svg></div>
+<svg class="vine vine-l" viewBox="0 0 240 480" fill="none">
+  <path d="M0 0C20 50 44 85 38 140s22 100 16 170c-4 40 8 72 5 155" stroke="#6B8F71" stroke-width="1.6" fill="none" opacity=".4"/>
+  <path d="M38 140c22 14 45 8 58 32" stroke="#6B8F71" stroke-width="1" fill="none" opacity=".3"/>
+  <use href="#cl" transform="translate(18,42) scale(1.4)"/><use href="#cl" transform="translate(35,85) scale(1.8)"/>
+  <use href="#cl" transform="translate(28,132) scale(1.2)"/><use href="#cl" transform="translate(46,115) scale(1)"/>
+  <use href="#cl" transform="translate(58,162) scale(1.5)"/><use href="#cl" transform="translate(82,172) scale(1.1)"/>
+  <use href="#cl" transform="translate(38,205) scale(1.6)"/><use href="#cl" transform="translate(22,248) scale(1.2)"/>
+  <use href="#cl" transform="translate(50,282) scale(1.5)"/><use href="#cl" transform="translate(44,325) scale(1.7)"/>
+  <use href="#cl" transform="translate(65,315) scale(1)"/><use href="#cl" transform="translate(50,375) scale(1.1)"/>
+  <use href="#cl" transform="translate(36,415) scale(1.4)"/>
+  <use href="#lf" transform="translate(10,60) scale(1.1) rotate(-22)"/><use href="#lf" transform="translate(45,105) scale(.9) rotate(12)"/>
+  <use href="#lf" transform="translate(22,178) scale(1.2) rotate(-8)"/><use href="#lf" transform="translate(62,238) scale(1) rotate(28)"/>
+  <use href="#lf" transform="translate(36,298) scale(1.1) rotate(-18)"/><use href="#lf" transform="translate(44,398) scale(1.3) rotate(-32)"/>
+</svg>
+<svg class="vine vine-r" viewBox="0 0 240 480" fill="none" style="transform:scaleX(-1)">
+  <path d="M0 0C20 50 44 85 38 140s22 100 16 170c-4 40 8 72 5 155" stroke="#6B8F71" stroke-width="1.6" fill="none" opacity=".4"/>
+  <use href="#cl" transform="translate(18,42) scale(1.4)"/><use href="#cl" transform="translate(35,85) scale(1.8)"/>
+  <use href="#cl" transform="translate(28,132) scale(1.2)"/><use href="#cl" transform="translate(58,162) scale(1.5)"/>
+  <use href="#cl" transform="translate(38,205) scale(1.6)"/><use href="#cl" transform="translate(22,248) scale(1.2)"/>
+  <use href="#cl" transform="translate(50,282) scale(1.5)"/><use href="#cl" transform="translate(44,325) scale(1.7)"/>
+  <use href="#cl" transform="translate(50,375) scale(1.1)"/><use href="#cl" transform="translate(36,415) scale(1.4)"/>
+  <use href="#lf" transform="translate(10,60) scale(1.1) rotate(-22)"/><use href="#lf" transform="translate(22,178) scale(1.2) rotate(-8)"/>
+  <use href="#lf" transform="translate(36,298) scale(1.1) rotate(-18)"/><use href="#lf" transform="translate(44,398) scale(1.3) rotate(-32)"/>
+</svg>
+<div id="petals"></div>
+<div class="hero-inner">
+  <p class="h-pre">Together with their families</p>
+  <h1 class="h-names"><span class="v">Vineel</span><span class="amp">&</span><span class="s">Sneha</span></h1>
+  <p class="h-tag">are getting married</p>
+  <div class="h-date">November 18 – 20, 2026</div>
+  <p class="h-loc">Jaipur, Rajasthan, India</p>
+  <p class="h-welcome" id="heroWelcome"></p>
+</div>
+<div class="scroll-cue"><svg viewBox="0 0 20 28" fill="none"><path d="M10 2v18M4 16l6 6 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+</section>
+
+<div class="cdown"><h3>Counting Down to the Celebration</h3><div class="cd-grid" id="cd"></div></div>
+<div class="orn"><svg viewBox="0 0 200 20" fill="none"><line x1="0" y1="10" x2="80" y2="10" stroke="#D9A3A0" stroke-width=".5"/><line x1="120" y1="10" x2="200" y2="10" stroke="#D9A3A0" stroke-width=".5"/><circle cx="100" cy="10" r="6" stroke="#B8963E" stroke-width=".5" fill="none" opacity=".5"/><circle cx="100" cy="10" r="3" stroke="#C4706E" stroke-width=".4" fill="none" opacity=".4"/><circle cx="100" cy="10" r="1" fill="#B8963E" opacity=".4"/></svg></div>
+
+<!-- STORY -->
+<section class="story-wrap" id="story"><div class="inner">
+  <p class="sec-label">How It All Began</p><h2 class="sec-title">Our Story</h2><div class="sec-line"></div>
+  <div class="tl">
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><img class="tl-img" src="Our_Story_2.JPG" alt="When we first met"><div class="tl-body"><span class="yr">The Beginning</span><h4>When We First Met</h4><p>Some love stories start with a grand gesture, but ours started with a simple hello — and from that moment, everything just clicked. The universe had been plotting this all along.</p></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><img class="tl-img" src="Our_Story_1.JPG" alt="Falling in love"><div class="tl-body"><span class="yr">The Adventures</span><h4>Falling In Love</h4><p>From late-night conversations to spontaneous adventures, every day together felt like discovering something new. Laughter became our love language, and soon we couldn't imagine life apart.</p></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><img class="tl-img" src="Our_Story_4.JPG" alt="Growing together"><div class="tl-body"><span class="yr">The Milestones</span><h4>Growing Together</h4><p>Through graduations, new cities, and every chapter in between — we celebrated each other's wins and held each other through the rest. Every milestone was sweeter because we shared it.</p></div></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><img class="tl-img" src="Our_Story_3.jpeg" alt="The proposal"><div class="tl-body"><span class="yr">Forever Begins</span><h4>The Proposal</h4><p>And then came the moment that changed everything — a question, a yes, and a promise to spend forever together. Now we're ready to celebrate with the people we love most.</p></div></div></div>
+  </div>
+</div></section>
+
+<div class="orn"><svg viewBox="0 0 200 20" fill="none"><line x1="0" y1="10" x2="80" y2="10" stroke="#A3C4A8" stroke-width=".5"/><line x1="120" y1="10" x2="200" y2="10" stroke="#A3C4A8" stroke-width=".5"/><circle cx="100" cy="10" r="6" stroke="#B8963E" stroke-width=".5" fill="none" opacity=".5"/><circle cx="100" cy="10" r="3" stroke="#6B8F71" stroke-width=".4" fill="none" opacity=".4"/><circle cx="100" cy="10" r="1" fill="#B8963E" opacity=".4"/></svg></div>
+
+<!-- EVENTS (populated dynamically based on guest) -->
+<section class="events-wrap" id="events"><div class="inner">
+  <p class="sec-label">Your Celebration</p><h2 class="sec-title">The Events</h2><div class="sec-line"></div>
+  <div class="ev-grid" id="evGrid"></div>
+</div></section>
+
+<div class="orn"><svg viewBox="0 0 200 20" fill="none"><line x1="0" y1="10" x2="80" y2="10" stroke="#D9A3A0" stroke-width=".5"/><line x1="120" y1="10" x2="200" y2="10" stroke="#D9A3A0" stroke-width=".5"/><circle cx="100" cy="10" r="6" stroke="#B8963E" stroke-width=".5" fill="none" opacity=".5"/><circle cx="100" cy="10" r="3" stroke="#C4706E" stroke-width=".4" fill="none" opacity=".4"/><circle cx="100" cy="10" r="1" fill="#B8963E" opacity=".4"/></svg></div>
+
+<!-- GALLERY -->
+<section class="gal-wrap" id="gallery"><div class="inner">
+  <p class="sec-label">Moments We Cherish</p><h2 class="sec-title">Gallery</h2><div class="sec-line"></div>
+  <div class="gal-grid">
+    <div class="gal-item"><img src="Gallery_5.jpg" alt="Vineel & Sneha"></div>
+    <div class="gal-item"><img src="Gallery.jpg" alt="Vineel & Sneha"></div>
+    <div class="gal-item"><img src="Gallery_3.jpg" alt="Vineel & Sneha"></div>
+    <div class="gal-item"><img src="Gallery_2.jpg" alt="Vineel & Sneha"></div>
+    <div class="gal-item"><img src="Gallery_4.jpg" alt="Vineel & Sneha"></div>
+  </div>
+</div></section>
+
+<!-- RSVP -->
+<section class="rsvp-wrap" id="rsvp">
+<svg class="rsvp-vine rv-l" viewBox="0 0 160 260" fill="none">
+  <path d="M0 260C22 215 14 170 30 120s-18-72 0-120" stroke="#A3C4A8" stroke-width="1.4" fill="none" opacity=".35"/>
+  <use href="#cl" transform="translate(16,22) scale(1.4)"/><use href="#cl" transform="translate(28,60) scale(1.7)"/>
+  <use href="#cl" transform="translate(10,100) scale(1.2)"/><use href="#cl" transform="translate(35,140) scale(1.5)"/>
+  <use href="#cl" transform="translate(18,185) scale(1.3)"/><use href="#cl" transform="translate(6,228) scale(1.6)"/>
+  <use href="#lf" transform="translate(22,40) scale(1) rotate(-12)"/><use href="#lf" transform="translate(6,118) scale(1.2) rotate(22)"/>
+</svg>
+<svg class="rsvp-vine rv-r" viewBox="0 0 160 260" fill="none">
+  <path d="M160 0C138 42 148 88 130 135s26 68 8 125" stroke="#A3C4A8" stroke-width="1.4" fill="none" opacity=".35"/>
+  <use href="#cl" transform="translate(130,22) scale(1.4)"/><use href="#cl" transform="translate(142,62) scale(1.6)"/>
+  <use href="#cl" transform="translate(118,105) scale(1.3)"/><use href="#cl" transform="translate(138,158) scale(1.5)"/>
+  <use href="#cl" transform="translate(125,210) scale(1.2)"/>
+  <use href="#lf" transform="translate(136,42) scale(1.1) rotate(152)"/><use href="#lf" transform="translate(115,128) scale(1) rotate(188)"/>
+</svg>
+<p class="sec-label">We'd Love to Have You</p><h2 class="sec-title">RSVP</h2><div class="sec-line"></div>
+<div class="rsvp-inner">
+  <div id="rForm">
+    <div id="rHead" style="margin-bottom:1.5rem;text-align:left"></div>
+    <div id="eCards"></div>
+    <div style="margin-top:1.2rem;text-align:left"><label style="display:block;margin-bottom:.3rem;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;opacity:.55">Dietary Needs</label><input type="text" id="dIn" class="r-in" placeholder="Any restrictions?"></div>
+    <div style="margin-top:.8rem;text-align:left"><label style="display:block;margin-bottom:.3rem;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;opacity:.55">Message for the Couple</label><textarea id="mIn" rows="3" class="r-in" style="resize:vertical" placeholder="Share your wishes..."></textarea></div>
+    <button class="rsvp-btn" id="subBtn">Submit RSVP</button>
+  </div>
+  <div class="rsvp-ok" id="rOk"><h3>Thank you</h3><p>Your RSVP has been received. We can't wait to celebrate with you in Jaipur.</p></div>
+</div>
+</section>
+
+<div class="orn"><svg viewBox="0 0 200 20" fill="none"><line x1="0" y1="10" x2="80" y2="10" stroke="#D9A3A0" stroke-width=".5"/><line x1="120" y1="10" x2="200" y2="10" stroke="#D9A3A0" stroke-width=".5"/><circle cx="100" cy="10" r="6" stroke="#B8963E" stroke-width=".5" fill="none" opacity=".5"/><circle cx="100" cy="10" r="3" stroke="#C4706E" stroke-width=".4" fill="none" opacity=".4"/><circle cx="100" cy="10" r="1" fill="#B8963E" opacity=".4"/></svg></div>
+
+<footer><div class="fm">V & S</div><p>Made with love for our favorite people<br>November 18–20, 2026 · Jaipur, Rajasthan, India<br><span class="tag">#VineelWedsSneha</span></p></footer>
+
+<script>
+const PW='vineelsneha2026';
+const G=[{"names": ["Mr. Vineel Devalapalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Raj Devalapalli", "Mrs. Vaidehi Devalapalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Ruchika Devalapalli", "Mr. Tushar More"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ram Kishan Kallur", "Mrs. Vishali Kallur", "Aarathi Kallur", "Avani Kallur"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sasidhar Kanaparthy", "Mrs. Ramya Kallur", "Riyan Kanaparthy", "Smt. Aruna Kallur"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Mahathi Komaragiri", "Mr. Ajay Kapadia"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Mukteeshwar Gande", "Mrs. Surekha Gande", "Sahithya Gande"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sriniketh Gande", "Mr. Aneri Patel-Gande"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Madhusudhan Vodapalli", "Mrs. Shailaja Vodapalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Rohan Vodapalli", "Ms. Niki Shah"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Shreya Vodapalli", "Mr. Anant Jani"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Madhava Reddy", "Mrs. Mamata Reddy", "Vineeth Reddy", "Priya Reddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Praveen Reddy Billa", "Mrs. Srilatha Reddy", "Manasa Billa", "Prashanth Billa"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Deepak Sirdeshmukh", "Mrs. Pratibha Sirdeshmukh", "Sid Sirdeshmukh", "Gaurav Sirdeshmukh", "Goutham Sirdeshmukh"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Vijendra Nalamothu", "Mrs. Devi Nalamothu", "Rithvik Nalamothu", "Nithya Nalamothu"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ramesh Upadhyayula", "Mrs. Sujatha Upadhyayula", "Sai Upadhyayula"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ramakrishna Neravetla", "Mrs. Lakshmi Neravetla", "Rithvik Neravetla", "Sathvik Neravetla"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Venkat Arikarevula", "Mrs. Annapurna Arikarevula", "Anand Arikarevula", "Anirudh Arikarevula", "Ananya Arikarevula"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Seshagirirao Nidamarti", "Mrs. Mangala Nidamarti", "Neha Nidamarti"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Nikhil Nidamarti", "Mrs. Suma Sudhir"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Hari Har Vunnava", "Mrs. Swarna Vunnava", "Nikhita Vunnava", "Rithika Vunnava"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Kishan Sharma", "Mrs. Rita Sharma"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Sanchita Sharma Reddy", "Mr. Anish Reddy", "Alia Reddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Kanaka Reddy", "Mrs. Lakshmi Reddy", "Ashish Reddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Anoosha Reddy", "Mr. Ishan Shah", "Ava Reddy Shah"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Srikanth Babu", "Mrs. Bhanu Babu"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Sneha Babu", "Mr. Karan Grover", "Shane Grover", "Ary Grover"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Dr. T.S. Rao", "Mrs. Saraswathy Kallur", "Aditya Deshmukh"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Anirudh Rao Deshmukh", "Mrs. Akhila Rao Ayyagari", "Anagha Deshmukh", "Ananya Deshmukh"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Umamahesh Kallur", "Mrs. Lavanya Kallur", "Abhiram Kallur", "Ashutosh Kallur"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Pavan Kishan Kallur", "Mrs. Ragasindhu Kallur", "Amogha Kallur", "Smt. Padma Kallur"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ramchander Rao Devulapally", "Mrs. Padma Devulapally"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Shailesh Develpalli", "Mrs. Malathi Develpalli", "Neelambari Develpalli", "Nithya Develpalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Sri. Kolipaka Venkataramarao", "Smt. Vijaya Kolipaka"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Malathi Pendem", "Mr. Shantan Pendem"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Tulsi Desai", "Mr. Jay Leone"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Brahmaji Valiveti", "Mrs. Shailaja Valiveti", "Pratyusha Valiveti"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Vimal Kavuru", "Mrs. Sudha Kavuru"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Rajender Venkat", "Mrs. Leela Venkat"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Shyam Madoor", "Mrs. Padma Madoor"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Sudhir Guru", "Mrs. Anuradha Guru", "Ishan Guru", "Vibhu Guru"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Rajendra Appalaneni"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Hemantha Koneru", "Mr. Ajay Koneru", "Amulya Koneru"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Geeta Gollapudi", "Mr. Deviprasad Gollapudi"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Yashoda Namburi", "Mr. Satyanarayan Namburi"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Nagamahender Velishala", "Mrs. Rani Velishala"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Dr. Ramesh Vishwanath", "Mrs. Gita Vishwanath"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Vijayalaxmi Dasari", "Mr. Koteswar Rao", "Chaitanya Dasari", "Anvitha Dasari"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Bindu Yalamanchili", "Mr. Ramana Yalamanchili"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Laxman Koka", "Mrs. Vidya Koka"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sreenivas Gade", "Mrs Kanigiri Gade"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Venkateshwar Rao Vaddiraj", "Mrs. Ramadevi Vaddiraj"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Sirish Vaddiraj", "Mrs. Pavani Vaddiraj"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Sreedevi Pullipaka"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Krishna Devulapally", "Mrs. Aanal Devulapally"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Hari Kiran Devulapally", "Mrs. Ramya Devulapally", "Partha Devulapally", "Mayuri Devulapally"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrunal Patel", "Raahi Patel"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Shashank Katti", "Mrs. Vijaya Katti"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Prerana Katti Bhatia", "Mr. Curran Bhatia", "Ciana Bhatia"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Shivkumar Kunapuli", "Mrs. Anuradha Kunapuli", "Nikhil Kunapuli", "Ajay Kunapuli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Suresh Bathala", "Mrs. Anupama Bathala"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Sri. Dilip Shahaji Kallur", "Mrs. Vennela Kallur", "Mr. Vijay Dharani", "Aradhya Dharani", "Apeksha Dharani"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Muninder Devulapally", "Mrs. Jhansi Devulapally", "Siddharth Devulupally", "Vashist Devulapally"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Srikanth Kondapalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Aruna Kolipaka", "Mr. Bhaskar Ajjarapu + 2 Kids"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Arunark Kolipaka", "Mrs. Madhuri Kolipaka"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Shravan Vaddiraj", "Mrs. Sudha Vaddiraj"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Raju Mantena", "Mrs. Padma Mantena", "Ms. Sravya Mantena"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Andrew Gelman", "Ms. Cassondra Taylor-Bird"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Srinvas Maddali", "Ms. Annapurna Maddali"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Rasik Gondalia", "Mrs. Bharati Gondalia"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Surender", "Mrs. Anuradha Chirra"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Rajashekar", "Mrs. Supraja Chirra"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Santanu Das", "Mrs. Anu Das"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Babu Sanji", "Mrs. Jayshree Sanji"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Venkatesh Nayini", "Mrs. Sandhya Nayini"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ajay Karan", "Mrs. Jyothi Karan"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Tanuja Nuvvula", "Mr. Ramakrishna Prasad Nuvvula"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mrs. Shailaja Dheeram", "Mr. Prakash Dheeram"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Aruna Ganti", "Mr. Suryam Ganti"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sudhakar Vidhyala", "Mrs. Geetha Vidhyala"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Dr. Ranjita Sengupta", "Mr. Rick Kanungo"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Satyapal Pareddy", "Mrs. Kavita Pareddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mrs. Malathi Komaragiri", "Mr. Murali Komaragiri"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Anuradha Dronadula", "Ravi Dronadula"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ganesh Vaddiraj", "Shyamala Vaddiraj"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Sirish Vaddiraj", "Pavani Vaddiraj"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Narayana Rao *"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Ajay Abbaraju *"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Praveen Kallur *"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Rajendra Mama"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Tajender Mama"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Raju", "Madhuri"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Prashant Vemuganti"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Phani pulijala"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Nitin Harkara"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Raju Karimnagar"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Srinu Boston"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Haritha Pingle"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Parinitha"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Srinivas Pingle"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Deepak Pingle"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Dheeraj Pingle"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Raju's aunts kids"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Mohit Reddy", "Mrs. Navya Maddali"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ramaswamy Gummadi", "Mrs. Veda Gummadi", "Bavica Gummadi", "Bhavish Gummadi"], "events": {"day1": false, "day2": true, "day3": true}}, {"names": ["Mr. Sridhar Vajinepalli", "Mrs. Sridevi Vajinepalli"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Amy Song", "Mr. Jordan"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Ayush Mehta", "Ms.Avanika"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Janani Jayesh", "Mr. Anirudh V"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Manish Rao", "Ms. Vikitha Reddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Dinkar Khattar", "Ms. Rhea"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Shivani Govil", "Mr. Jahaan T"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Sarah Ali", "Mr. Aasim"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Tim Hitchcock", "Ms. Lydia De La Parra"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Javier Aguirre", "Ms. Valerie Moore"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Quinton Pettruciani"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Danish D'Souza"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Urbi Saha"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Celine Dela Llana", "Mr. Shin"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Nick Acquavella", "Ms. Marissa Patel"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Ericka Katzenback"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Lexie Lattner"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Kate Shirkey"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Christopher Dacey", "Ms. Olivia Schuller"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Matthew Luppanaci", "Ms. Melody"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Bradley Khan"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Patrick Limerick"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Michael Carlucci"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Matt Forcillo"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Theresa Tuminello", "Mr. Garrett(?)"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Deserae Longo", "Mr. Ryan"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Carly Longo", "Mr. Will"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Siddharth Pillai", "Ms. Saachi"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Avanika Sagar"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sathya Sahay", "Ms. Wife"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Vir Chopra", "GF(?)"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Roshini Mudunnuru", "Mr. Praneet"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Ms. Seema Shah", "Ms. Friend"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Sheraz Bhatti", "Ms. Wife"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Abraham Khan"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Neil Mullengada"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Mihir Shah"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Daniel Giuliano", "Ms. GF"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Maaz Rehan"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Mr. Keshav Ramireddy"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Dembi", "Aaro"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Tanmay", "Laksh", "Amey*"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Brian Li", "Ben D"], "events": {"day1": true, "day2": true, "day3": true}}, {"names": ["Akash", "Adya"], "events": {"day1": true, "day2": true, "day3": true}}];
+const EV=[{k:'day1',n:'Sangeet & Mehendi',d:'November 18, 2026',desc:'An evening of music, dance, and beautiful henna art — performances, laughter, and unforgettable memories to begin the celebration.',meta:'Evening · Jaipur, Rajasthan'},{k:'day2',n:'Haldi Day',d:'November 19, 2026',desc:'A joyous morning of turmeric, blessings, and celebration as family and friends shower the couple with love and good wishes.',meta:'Morning · Jaipur, Rajasthan'},{k:'day3',n:'The Wedding',d:'November 20, 2026',desc:'The day we begin our forever — surrounded by loved ones, sacred rituals, and all the joy in the world.',meta:'All Day · Jaipur, Rajasthan'}];
+
+let curGroup=null, rD={};
+document.body.style.overflow='hidden';
+
+// ===== Step 1: Password =====
+document.getElementById('pwBtn').addEventListener('click',chkPw);
+document.getElementById('pwIn').addEventListener('keydown',e=>{if(e.key==='Enter')chkPw()});
+function chkPw(){
+  const i=document.getElementById('pwIn');
+  if(i.value.trim().toLowerCase()===PW){
+    document.getElementById('pwOverlay').classList.add('gone');
+    document.getElementById('nameOverlay').classList.remove('gone');
+    setTimeout(()=>document.getElementById('nameIn').focus(),500);
+  }else{
+    document.getElementById('pwErr').classList.add('on');
+    i.classList.add('shake');setTimeout(()=>i.classList.remove('shake'),400);
+    i.value='';i.focus();
+  }
+}
+
+// ===== Step 2: Name Entry (no suggestions!) =====
+document.getElementById('nameBtn').addEventListener('click',chkName);
+document.getElementById('nameIn').addEventListener('keydown',e=>{if(e.key==='Enter')chkName()});
+
+function norm(s){return s.toLowerCase().replace(/^(mr\.|mrs\.|ms\.|dr\.|sri\.|smt\.)\s*/gi,'').replace(/[^a-z ]/g,'').trim()}
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},()=>Array(n+1).fill(0));for(let i=0;i<=m;i++)d[i][0]=i;for(let j=0;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]!==b[j-1]?1:0));return d[m][n]}
+
+window.resetNameSearch=function(){
+  document.getElementById('disambigPanel').style.display='none';
+  document.getElementById('nameErr').classList.remove('on');
+  const row=document.querySelector('#nameOverlay .ov-row');
+  const sub=document.querySelector('#nameOverlay .ov-sub');
+  row.style.display='flex';sub.style.display='block';
+  const inp=document.getElementById('nameIn');inp.value='';inp.focus();
+};
+
+function findAllGuests(query){
+  if(!query||query.length<2)return[];
+  const q=norm(query);let best=Infinity,results=[];
+  G.forEach((g,i)=>{
+    let gBest=Infinity;
+    g.names.forEach(name=>{
+      const n=norm(name);
+      if(n.includes(q)){gBest=Math.min(gBest,0);return}
+      n.split(' ').forEach(w=>{
+        if(w.startsWith(q.split(' ')[0]))gBest=Math.min(gBest,.5);
+        const d=lev(q,w),t=Math.max(1,Math.floor(w.length*.35));
+        if(d<=t)gBest=Math.min(gBest,d);
+      });
+      const fd=lev(q,n),ft=Math.max(2,Math.floor(n.length*.3));
+      if(fd<=ft)gBest=Math.min(gBest,fd);
+    });
+    if(gBest<Infinity){
+      if(gBest<best){best=gBest;results=[i]}
+      else if(gBest===best){results.push(i)}
+    }
+  });
+  return results;
+}
+
+function showWelcome(idx){
+  curGroup=idx;
+  const g=G[idx];
+  document.querySelector('#nameOverlay .ov-row').style.display='none';
+  document.querySelector('#nameOverlay .ov-sub').style.display='none';
+  document.getElementById('nameErr').classList.remove('on');
+  document.getElementById('disambigPanel').style.display='none';
+  const welEl=document.getElementById('welcomeMsg');
+  welEl.style.display='block';
+  document.getElementById('welcomeName').textContent='Welcome, '+g.names[0].replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.|Sri\.|Smt\.)\s*/i,'')+'!';
+  const invitedEvs=EV.filter(e=>g.events[e.k]).map(e=>e.n);
+  document.getElementById('welcomeParty').innerHTML=
+    g.names.length>1?'<strong>Your party:</strong> '+g.names.join(', '):'';
+}
+
+function chkName(){
+  const q=document.getElementById('nameIn').value.trim();
+  const errEl=document.getElementById('nameErr');
+  const welEl=document.getElementById('welcomeMsg');
+  errEl.classList.remove('on');welEl.style.display='none';
+  document.getElementById('disambigPanel').style.display='none';
+  const matches=findAllGuests(q);
+  if(matches.length===0){
+    errEl.classList.add('on');
+    document.getElementById('nameIn').classList.add('shake');
+    setTimeout(()=>document.getElementById('nameIn').classList.remove('shake'),400);
+    return;
+  }
+  if(matches.length===1){showWelcome(matches[0]);return;}
+  // Multiple matches — show disambiguation
+  document.querySelector('#nameOverlay .ov-row').style.display='none';
+  document.querySelector('#nameOverlay .ov-sub').style.display='none';
+  const panel=document.getElementById('disambigPanel');
+  panel.style.display='block';
+  const list=document.getElementById('disambigList');
+  list.innerHTML=matches.map(idx=>{
+    const g=G[idx];
+    return`<button class="disambig-opt" onclick="showWelcome(${idx})">
+      <span class="disambig-names">${g.names.join(' · ')}</span>
+    </button>`;
+  }).join('');
+}
+
+document.getElementById('enterSiteBtn').addEventListener('click',()=>{
+  document.getElementById('nameOverlay').classList.add('gone');
+  document.body.style.overflow='';
+  document.getElementById('mainNav').classList.add('show');
+  buildSite();
+});
+
+function buildSite(){
+  const g=G[curGroup];
+  // Personalized hero welcome
+  const firstName=g.names[0].replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.|Sri\.|Smt\.)\s*/i,'').split(' ')[0];
+  const hw=document.getElementById('heroWelcome');
+  hw.textContent='Welcome, '+firstName+'. We are so honored to have you.';
+  hw.style.display='block';
+
+  // Build events section — only show events they're invited to
+  const evGrid=document.getElementById('evGrid');
+  evGrid.innerHTML='';
+  const dayLabels=['Day One','Day Two','Day Three'];
+  EV.forEach((ev,i)=>{
+    if(!g.events[ev.k])return;
+    evGrid.innerHTML+=`<div class="ev-card"><div class="ev-top"></div><div class="ev-body"><div class="ev-day">${dayLabels[i]}</div><div class="ev-date">${ev.d}</div><div class="ev-name">${ev.n}</div><p class="ev-desc">${ev.desc}</p><div class="ev-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ev.meta}</div></div></div>`;
+  });
+
+  // Build RSVP section
+  const rHead=document.getElementById('rHead');
+  rHead.innerHTML='<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:1.2rem;margin-bottom:.5rem"><h3 style="font-family:Cormorant Garamond,serif;font-size:1.15rem;font-weight:300;margin-bottom:.2rem">RSVP for '+g.names.join(' & ')+'</h3><p style="font-size:.8rem;opacity:.55">Please respond for each event</p></div>';
+  const cc=document.getElementById('eCards');cc.innerHTML='';rD={};
+  EV.forEach(ev=>{
+    if(!g.events[ev.k])return;
+    rD[ev.k]={};
+    let rows='';
+    g.names.forEach(name=>{
+      rD[ev.k][name]=null;
+      rows+=`<div class="g-row"><span class="g-name">${name}</span><div class="g-tog"><button data-e="${ev.k}" data-n="${name}" data-v="accept" onclick="tog(this)">Accept</button><button data-e="${ev.k}" data-n="${name}" data-v="decline" onclick="tog(this)">Decline</button></div></div>`;
+    });
+    cc.innerHTML+=`<div class="ev-rsvp"><h4>${ev.n}</h4><div class="ev-rsvp-d">${ev.d}</div>${rows}</div>`;
+  });
+
+  // Scroll animations
+  const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.style.opacity='1';x.target.style.transform='translateY(0)'}}),{threshold:.15});
+  document.querySelectorAll('.ev-card,.gal-item,.tl-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(16px)';el.style.transition='opacity .7s ease,transform .7s ease';obs.observe(el)});
+}
+
+window.tog=function(b){const e=b.dataset.e,n=b.dataset.n,v=b.dataset.v,sib=b.parentElement.querySelector('button[data-v="'+(v==='accept'?'decline':'accept')+'"]');if(v==='accept'){b.classList.add('a-on');sib.classList.remove('d-on');rD[e][n]='accept'}else{b.classList.add('d-on');sib.classList.remove('a-on');rD[e][n]='decline'}};
+
+document.getElementById('subBtn').addEventListener('click',()=>{
+  let ok=true;for(const e in rD)for(const n in rD[e])if(!rD[e][n]){ok=false;break};
+  if(!ok){alert('Please select Accept or Decline for every guest and event.');return}
+  document.getElementById('rForm').style.display='none';
+  document.getElementById('rOk').style.display='block';
+  console.log('RSVP:',JSON.stringify({group:G[curGroup].names,responses:rD,dietary:document.getElementById('dIn').value,message:document.getElementById('mIn').value},null,2));
+});
+
+// Petals
+!function(){const c=document.getElementById('petals'),cols=['#C4706E','#D9A3A0','#A14D4A','#B86B4A','#C4827E','#E4C0BE'];for(let i=0;i<12;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','svg');p.classList.add('petal');p.setAttribute('width','12');p.setAttribute('height','14');p.setAttribute('viewBox','0 0 12 14');p.innerHTML='<path d="M6 0C8 3 11 5 11 8c0 3-2 6-5 6S1 11 1 8C1 5 4 3 6 0z" fill="'+cols[i%cols.length]+'" opacity="'+(0.3+Math.random()*.18)+'"/>';p.style.left=Math.random()*100+'%';p.style.animationDuration=(14+Math.random()*18)+'s';p.style.animationDelay=Math.random()*22+'s';p.style.width=(7+Math.random()*7)+'px';c.appendChild(p)}}();
+
+// Countdown
+function cd(){const w=new Date('2026-11-18T00:00:00+05:30'),n=new Date(),d=w-n;if(d<=0){document.getElementById('cd').innerHTML='<div style="font-family:Cormorant Garamond,serif;font-size:1.5rem;font-weight:300">The celebration has begun</div>';return}const dd=Math.floor(d/864e5),hh=Math.floor(d%864e5/36e5),mm=Math.floor(d%36e5/6e4),ss=Math.floor(d%6e4/1e3);document.getElementById('cd').innerHTML='<div><div class="cd-n">'+dd+'</div><div class="cd-l">Days</div></div><div><div class="cd-n">'+hh+'</div><div class="cd-l">Hours</div></div><div><div class="cd-n">'+mm+'</div><div class="cd-l">Minutes</div></div><div><div class="cd-n">'+ss+'</div><div class="cd-l">Seconds</div></div>'}cd();setInterval(cd,1000);
+
+// Smooth scroll
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}));
+</script>
+</body>
+</html>
