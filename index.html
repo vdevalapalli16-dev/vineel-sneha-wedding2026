@@ -46,10 +46,7 @@ body{font-family:'Jost',sans-serif;color:var(--ink);background:var(--ivory);over
 .ov-btn:hover{background:var(--jaipur)}
 .ov-err{color:var(--jaipur);font-size:.78rem;margin-top:1rem;display:none;font-weight:400}
 .ov-err.on{display:block}
-.disambig-opt{display:flex;flex-direction:column;gap:.2rem;width:100%;text-align:left;padding:.85rem 1rem;background:transparent;border:1px solid var(--sand);margin-bottom:.5rem;cursor:pointer;transition:border-color .25s,background .25s;font-family:'Jost',sans-serif}
-.disambig-opt:hover{border-color:var(--jaipur);background:var(--jaipur-faint)}
-.disambig-names{font-size:.88rem;color:var(--ink);font-weight:400;line-height:1.4}
-.disambig-evs{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light)}
+.ov-hint{font-size:.73rem;color:var(--text-light);margin-top:1rem;opacity:.55;font-style:italic}
 
 /* Welcome message on name screen */
 .welcome-msg{display:none;margin-top:1.5rem;padding:1.2rem;border:1px solid var(--sage-light);background:var(--sage-pale)}
@@ -65,28 +62,32 @@ nav a{text-decoration:none;font-size:.72rem;font-weight:400;letter-spacing:.2em;
 nav a:hover{color:var(--jaipur)}
 
 /* ===== HERO ===== */
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(253,251,247,.82) 0%,rgba(253,251,247,.7) 40%,rgba(253,251,247,.7) 60%,rgba(253,251,247,.82) 100%),url('Hero_Section.jpg') center/cover no-repeat}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:var(--ivory)}
+.hero-photo{position:absolute;inset:0;z-index:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(253,251,247,.35) 0%,rgba(253,251,247,.15) 30%,rgba(253,251,247,.15) 60%,rgba(253,251,247,.55) 85%,rgba(253,251,247,.95) 100%)}
 /* Rajasthani paisley block-print pattern */
-.hero-pattern{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 15c8 15 22 22 26 36s-6 30-26 30-30-16-26-30 18-21 26-36z' fill='%23A14D4A'/%3E%3Cpath d='M80 30c4 8 12 12 14 20s-4 16-14 16-16-8-14-16 10-12 14-20z' fill='%23FDFBF7'/%3E%3Ccircle cx='80' cy='50' r='4' fill='none' stroke='%23B8963E' stroke-width='.5'/%3E%3Cpath d='M30 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3Cpath d='M114 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3C/svg%3E");background-size:160px}
+.hero-pattern{position:absolute;inset:0;opacity:.015;background-image:url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 15c8 15 22 22 26 36s-6 30-26 30-30-16-26-30 18-21 26-36z' fill='%23A14D4A'/%3E%3Cpath d='M80 30c4 8 12 12 14 20s-4 16-14 16-16-8-14-16 10-12 14-20z' fill='%23FDFBF7'/%3E%3Ccircle cx='80' cy='50' r='4' fill='none' stroke='%23B8963E' stroke-width='.5'/%3E%3Cpath d='M30 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3Cpath d='M114 105c4-6 12-6 16 0s-4 12-8 12-12-6-8-12z' fill='none' stroke='%234A6E50' stroke-width='.5'/%3E%3C/svg%3E");background-size:160px}
 
 /* Hawa Mahal SVG skyline at bottom of hero */
 .hawa-mahal{position:absolute;bottom:0;left:0;right:0;z-index:1;display:flex;justify-content:center}
-.hawa-mahal svg{width:100%;max-width:1200px;height:auto;opacity:.08}
+.hawa-mahal svg{width:100%;max-width:1200px;height:auto;opacity:.05}
 
 /* Bougainvillea vines */
-.vine{position:absolute;top:0;z-index:2;width:clamp(140px,20vw,280px);opacity:.35}
+.vine{position:absolute;top:0;z-index:2;width:clamp(140px,20vw,280px);opacity:.28}
 .vine-l{left:0}.vine-r{right:0}
 .petal{position:absolute;z-index:1;pointer-events:none;animation:drift linear infinite}
 @keyframes drift{0%{transform:translateY(-10px) rotate(0) scale(.7);opacity:0}8%{opacity:.45}85%{opacity:.2}100%{transform:translateY(100vh) rotate(400deg) scale(.3);opacity:0}}
 
 .hero-inner{position:relative;z-index:3;padding:2rem}
-.h-pre{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text-light);margin-bottom:1.8rem;animation:fu 1s .2s both}
+.hero-inner .h-names,.hero-inner .h-tag,.hero-inner .h-pre,.hero-inner .h-loc{text-shadow:0 1px 8px rgba(253,251,247,.8)}
+.h-pre{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text);margin-bottom:1.8rem;animation:fu 1s .2s both}
 .h-names{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:300;line-height:1;margin-bottom:.5rem;animation:fu 1s .5s both}
 .h-names .v{color:var(--sage-deep)}.h-names .s{color:var(--jaipur-deep)}
 .h-names .amp{font-family:'Pinyon Script',cursive;color:var(--jaipur);font-size:.55em;margin:0 .15em;display:inline-block}
 .h-tag{font-family:'Pinyon Script',cursive;font-size:clamp(1.2rem,3vw,1.8rem);color:var(--text-light);margin-bottom:2.5rem;animation:fu 1s .8s both}
-.h-date{display:inline-block;font-size:.72rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);padding:.8rem 2rem;border:1px solid var(--gold);animation:fu 1s 1.1s both}
-.h-loc{margin-top:1rem;font-size:.82rem;color:var(--text-light);letter-spacing:.12em;animation:fu 1s 1.3s both}
+.h-date{display:inline-block;font-size:.72rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);padding:.8rem 2rem;border:1px solid var(--gold);background:rgba(253,251,247,.6);backdrop-filter:blur(4px);animation:fu 1s 1.1s both}
+.h-loc{margin-top:1rem;font-size:.82rem;color:var(--text);letter-spacing:.12em;animation:fu 1s 1.3s both}
 /* Personalized welcome below location */
 .h-welcome{margin-top:1.5rem;font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;color:var(--jaipur);font-style:italic;animation:fu 1s 1.5s both;display:none}
 @keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -261,11 +262,6 @@ footer .tag{font-weight:500;color:var(--sage-deep);letter-spacing:.05em}
       <button class="ov-btn" id="nameBtn">Find</button>
     </div>
     <p class="ov-err" id="nameErr">We couldn't find your name on the guest list. Please check the spelling or contact the couple.</p>
-    <div id="disambigPanel" style="display:none;margin-top:1.2rem;text-align:left">
-      <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.8rem">We found a few matches. Please select your party:</p>
-      <div id="disambigList"></div>
-      <button onclick="resetNameSearch()" style="margin-top:.8rem;background:none;border:none;font-family:Jost,sans-serif;font-size:.72rem;color:var(--text-light);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline">← Try a different name</button>
-    </div>
     <div class="welcome-msg" id="welcomeMsg">
       <h4 id="welcomeName"></h4>
       <p id="welcomeParty"></p>
@@ -279,6 +275,7 @@ footer .tag{font-weight:500;color:var(--sage-deep);letter-spacing:.05em}
 
 <!-- HERO -->
 <section class="hero" id="home">
+<div class="hero-photo"><img src="Hero_Section.jpg" alt="Vineel & Sneha"></div>
 <div class="hero-pattern"></div>
 <div class="hawa-mahal"><svg viewBox="0 0 800 200"><use href="#hawa" style="color:var(--jaipur)"/></svg></div>
 <svg class="vine vine-l" viewBox="0 0 240 480" fill="none">
@@ -417,52 +414,23 @@ document.getElementById('nameIn').addEventListener('keydown',e=>{if(e.key==='Ent
 function norm(s){return s.toLowerCase().replace(/^(mr\.|mrs\.|ms\.|dr\.|sri\.|smt\.)\s*/gi,'').replace(/[^a-z ]/g,'').trim()}
 function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},()=>Array(n+1).fill(0));for(let i=0;i<=m;i++)d[i][0]=i;for(let j=0;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]!==b[j-1]?1:0));return d[m][n]}
 
-window.resetNameSearch=function(){
-  document.getElementById('disambigPanel').style.display='none';
-  document.getElementById('nameErr').classList.remove('on');
-  const row=document.querySelector('#nameOverlay .ov-row');
-  const sub=document.querySelector('#nameOverlay .ov-sub');
-  row.style.display='flex';sub.style.display='block';
-  const inp=document.getElementById('nameIn');inp.value='';inp.focus();
-};
-
-function findAllGuests(query){
-  if(!query||query.length<2)return[];
-  const q=norm(query);let best=Infinity,results=[];
+function findGuest(query){
+  if(!query||query.length<2)return null;
+  const q=norm(query);let best=Infinity,bestIdx=-1;
   G.forEach((g,i)=>{
-    let gBest=Infinity;
     g.names.forEach(name=>{
       const n=norm(name);
-      if(n.includes(q)){gBest=Math.min(gBest,0);return}
+      if(n.includes(q)){if(0<best){best=0;bestIdx=i}return}
       n.split(' ').forEach(w=>{
-        if(w.startsWith(q.split(' ')[0]))gBest=Math.min(gBest,.5);
+        if(w.startsWith(q.split(' ')[0])){const s=.5;if(s<best){best=s;bestIdx=i}}
         const d=lev(q,w),t=Math.max(1,Math.floor(w.length*.35));
-        if(d<=t)gBest=Math.min(gBest,d);
+        if(d<=t&&d<best){best=d;bestIdx=i}
       });
       const fd=lev(q,n),ft=Math.max(2,Math.floor(n.length*.3));
-      if(fd<=ft)gBest=Math.min(gBest,fd);
+      if(fd<=ft&&fd<best){best=fd;bestIdx=i}
     });
-    if(gBest<Infinity){
-      if(gBest<best){best=gBest;results=[i]}
-      else if(gBest===best){results.push(i)}
-    }
   });
-  return results;
-}
-
-function showWelcome(idx){
-  curGroup=idx;
-  const g=G[idx];
-  document.querySelector('#nameOverlay .ov-row').style.display='none';
-  document.querySelector('#nameOverlay .ov-sub').style.display='none';
-  document.getElementById('nameErr').classList.remove('on');
-  document.getElementById('disambigPanel').style.display='none';
-  const welEl=document.getElementById('welcomeMsg');
-  welEl.style.display='block';
-  document.getElementById('welcomeName').textContent='Welcome, '+g.names[0].replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.|Sri\.|Smt\.)\s*/i,'')+'!';
-  const invitedEvs=EV.filter(e=>g.events[e.k]).map(e=>e.n);
-  document.getElementById('welcomeParty').innerHTML=
-    g.names.length>1?'<strong>Your party:</strong> '+g.names.join(', '):'';
+  return bestIdx>=0?bestIdx:null;
 }
 
 function chkName(){
@@ -470,27 +438,25 @@ function chkName(){
   const errEl=document.getElementById('nameErr');
   const welEl=document.getElementById('welcomeMsg');
   errEl.classList.remove('on');welEl.style.display='none';
-  document.getElementById('disambigPanel').style.display='none';
-  const matches=findAllGuests(q);
-  if(matches.length===0){
+  const idx=findGuest(q);
+  if(idx===null){
     errEl.classList.add('on');
     document.getElementById('nameIn').classList.add('shake');
     setTimeout(()=>document.getElementById('nameIn').classList.remove('shake'),400);
     return;
   }
-  if(matches.length===1){showWelcome(matches[0]);return;}
-  // Multiple matches — show disambiguation
+  curGroup=idx;
+  const g=G[idx];
+  // Hide input row, show welcome
   document.querySelector('#nameOverlay .ov-row').style.display='none';
   document.querySelector('#nameOverlay .ov-sub').style.display='none';
-  const panel=document.getElementById('disambigPanel');
-  panel.style.display='block';
-  const list=document.getElementById('disambigList');
-  list.innerHTML=matches.map(idx=>{
-    const g=G[idx];
-    return`<button class="disambig-opt" onclick="showWelcome(${idx})">
-      <span class="disambig-names">${g.names.join(' · ')}</span>
-    </button>`;
-  }).join('');
+  errEl.classList.remove('on');
+  welEl.style.display='block';
+  document.getElementById('welcomeName').textContent='Welcome, '+g.names[0].replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.|Sri\.|Smt\.)\s*/i,'')+'!';
+  const invitedEvs=EV.filter(e=>g.events[e.k]).map(e=>e.n);
+  document.getElementById('welcomeParty').innerHTML=
+    (g.names.length>1?'<strong>Your party:</strong> '+g.names.join(', ')+'<br>':'')+
+    '<strong>You are invited to:</strong> '+invitedEvs.join(', ');
 }
 
 document.getElementById('enterSiteBtn').addEventListener('click',()=>{
